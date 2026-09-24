@@ -16,6 +16,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 import mskb  # noqa: E402
+import mskb_lifecycle  # noqa: E402
 
 
 class DesktopExecTests(unittest.TestCase):
@@ -82,9 +83,9 @@ class RestartMapperTests(unittest.TestCase):
             return 1
 
         with (
-            mock.patch.object(mskb, "remove_mskb_autostart", return_value=[]),
-            mock.patch.object(mskb, "mapper_run_pids", return_value=[]),
-            mock.patch.object(mskb, "_systemctl_user", side_effect=fake_systemctl),
+            mock.patch.object(mskb_lifecycle, "remove_mskb_autostart", return_value=[]),
+            mock.patch.object(mskb_lifecycle, "mapper_run_pids", return_value=[]),
+            mock.patch.object(mskb_lifecycle, "_systemctl_user", side_effect=fake_systemctl),
         ):
             status, reason = mskb.restart_mapper()
         self.assertEqual((status, reason), ("ok", "restarted"))
@@ -103,9 +104,9 @@ class RestartMapperTests(unittest.TestCase):
             return 1
 
         with (
-            mock.patch.object(mskb, "remove_mskb_autostart", return_value=[]),
-            mock.patch.object(mskb, "mapper_run_pids", return_value=[]),
-            mock.patch.object(mskb, "_systemctl_user", side_effect=fake_systemctl),
+            mock.patch.object(mskb_lifecycle, "remove_mskb_autostart", return_value=[]),
+            mock.patch.object(mskb_lifecycle, "mapper_run_pids", return_value=[]),
+            mock.patch.object(mskb_lifecycle, "_systemctl_user", side_effect=fake_systemctl),
         ):
             status, reason = mskb.restart_mapper()
         self.assertEqual((status, reason), ("ok", "started"))
@@ -117,10 +118,10 @@ class RestartMapperTests(unittest.TestCase):
             return 1
 
         with (
-            mock.patch.object(mskb, "remove_mskb_autostart", return_value=[]),
-            mock.patch.object(mskb, "mapper_run_pids", return_value=[111]),
-            mock.patch.object(mskb, "_stop_mapper_pids", return_value=False),
-            mock.patch.object(mskb, "_systemctl_user", side_effect=fake_systemctl),
+            mock.patch.object(mskb_lifecycle, "remove_mskb_autostart", return_value=[]),
+            mock.patch.object(mskb_lifecycle, "mapper_run_pids", return_value=[111]),
+            mock.patch.object(mskb_lifecycle, "_stop_mapper_pids", return_value=False),
+            mock.patch.object(mskb_lifecycle, "_systemctl_user", side_effect=fake_systemctl),
         ):
             status, reason = mskb.restart_mapper()
         self.assertEqual((status, reason), ("failed", "permission"))
@@ -134,9 +135,9 @@ class RestartMapperTests(unittest.TestCase):
             return 1
 
         with (
-            mock.patch.object(mskb, "remove_mskb_autostart", return_value=[]),
-            mock.patch.object(mskb, "mapper_run_pids", return_value=[]),
-            mock.patch.object(mskb, "_systemctl_user", side_effect=fake_systemctl),
+            mock.patch.object(mskb_lifecycle, "remove_mskb_autostart", return_value=[]),
+            mock.patch.object(mskb_lifecycle, "mapper_run_pids", return_value=[]),
+            mock.patch.object(mskb_lifecycle, "_systemctl_user", side_effect=fake_systemctl),
         ):
             status, reason = mskb.restart_mapper()
         self.assertEqual((status, reason), ("failed", "systemctl"))
@@ -150,9 +151,9 @@ class RestartMapperTests(unittest.TestCase):
             return 1
 
         with (
-            mock.patch.object(mskb, "remove_mskb_autostart", return_value=[]),
-            mock.patch.object(mskb, "mapper_run_pids", return_value=[]),
-            mock.patch.object(mskb, "_systemctl_user", side_effect=fake_systemctl),
+            mock.patch.object(mskb_lifecycle, "remove_mskb_autostart", return_value=[]),
+            mock.patch.object(mskb_lifecycle, "mapper_run_pids", return_value=[]),
+            mock.patch.object(mskb_lifecycle, "_systemctl_user", side_effect=fake_systemctl),
         ):
             status, reason = mskb.restart_mapper()
         self.assertEqual((status, reason), ("failed", "not_active"))

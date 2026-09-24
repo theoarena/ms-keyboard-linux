@@ -1,0 +1,188 @@
+# mskb_bindings.py
+#
+# config.json load/save and GUI exclusive-mode helpers.
+# The mapper still dual-fires when both key and exec are set; this
+# module only projects that contract for the favorites window.
+#
+# Used by: mskb_gui.py (via mskb), mskb_mapper.py, mskb_install.py
+# See also: mskb_paths.py
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+from mskb_paths import REPO_ROOT, _chown_user, config_path
+
+DEFAULT_CONFIG = {
+    "_comment": (
+        "Match keys from `mskb.py probe`. `key` is emitted via uinput "
+        "(bind it in Zorin Settings → Keyboard). `exec` runs on press."
+    ),
+    "bindings": {
+        "favorites_1": {"key": "F14", "exec": ""},
+        "favorites_2": {"key": "F15", "exec": ""},
+        "favorites_3": {"key": "F16", "exec": ""},
+        "favorites_4": {"key": "F17", "exec": ""},
+        "favorites_5": {"key": "F18", "exec": ""},
+        "favorites_star": {"key": "F13", "exec": ""},
+    },
+}
+
+# Strip order for the GUI. Defaults still list 1–5 then star to match the example JSON.
+"""Favorite binding ids in strip order (star, then 1–5).
+@tags: #model/favorite #model/config #subject/favorites #subject/form #type/constant
+"""
+FAVORITE_IDS = (
+    "favorites_star",
+    "favorites_1",
+    "favorites_2",
+    "favorites_3",
+    "favorites_4",
+    "favorites_5",
+)
+"""F13–F24 names offered as system shortcut bindings in the GUI.
+@tags: #model/shortcut #model/config #subject/form #type/constant
+"""
+SYSTEM_SHORTCUT_KEYS = tuple(f"F{n}" for n in range(13, 25))
+"""`.desktop` Exec field codes stripped before hotkey commands run.
+@tags: #model/desktop #format/string #type/constant
+"""
+_DESKTOP_FIELD_CODES = {
+    "%f",
+    "%F",
+    "%u",
+    "%U",
+    "%d",
+    "%D",
+    "%n",
+    "%N",
+    "%i",
+    "%c",
+    "%k",
+    "%v",
+    "%m",
+}
+
+
+def load_config(path: Path) -> dict:
+    if not path.exists():
+        return DEFAULT_CONFIG
+    with path.open() as fh:
+        data = json.load(fh)
+    bindings = dict(DEFAULT_CONFIG["bindings"])
+    bindings.update(data.get("bindings", {}))
+    data["bindings"] = bindings
+    return data
+
+
+def ensure_config() -> Path:
+    path = config_path()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    _chown_user(path.parent)
+    if not path.exists():
+        example = REPO_ROOT / "config.example.json"
+        payload = example.read_text() if example.exists() else json.dumps(DEFAULT_CONFIG, indent=2)
+        path.write_text(payload)
+        _chown_user(path)
+        print(f"Wrote default config: {path}")
+    return path
+
+
+def strip_field_codes(command: str) -> str:
+    """Drop .desktop field codes and Flatpak file-forwarding from an Exec line.
+
+    A hotkey has no URI or file list. Copying Exec as-is would leave `%U` / `@@`
+    tokens that make Flatpak wait for a file that never arrives.
+    @tags: #action/normalize #format/string #model/desktop #subject/desktop #type/helper
+    """
+    tokens: list[str] = []
+    skipping_at = False
+    for token in command.split():
+        if skipping_at:
+            if token == "@@":
+                skipping_at = False
+            continue
+        if token == "--file-forwarding" or token in _DESKTOP_FIELD_CODES:
+            continue
+        if token.startswith("@@"):
+            skipping_at = True
+            continue
+        tokens.append(token)
+    return " ".join(tokens)
+
+
+def kind_for_binding(binding: dict) -> str:
+    """Exclusive GUI mode for a JSON binding.
+
+    Runtime still dual-fires when both fields are set. The GUI projects that
+    as Command (exec wins) so the next Apply on this key drops `key`.
+    @tags: #action/normalize #model/binding #model/config #subject/form #type/helper
+    """
+    command = (binding.get("exec") or "").strip()
+    key = (binding.get("key") or "").strip()
+    if command:
+        return "command"
+    if key:
+        return "key"
+    return "none"
+
+
+def binding_for_kind(kind: str, value: str = "") -> dict:
+    """Build a binding with only one of `key` or `exec` set.
+
+    Dual-fire is a mapper feature, not a GUI mode. A later checkbox can opt
+    back into both fields; until then writes stay exclusive.
+    @tags: #action/normalize #model/binding #model/config #subject/form #type/helper
+    """
+    if kind in ("command", "app"):
+        return {"key": "", "exec": strip_field_codes(value)}
+    if kind == "key":
+        return {"key": (value or "").strip().upper(), "exec": ""}
+    return {"key": "", "exec": ""}
+
+
+def shortcut_key_choices(current: str = "") -> list[str]:
+    """F13–F24 for the shortcut combo, plus a non-standard current value.
+
+    Leaving an unknown name in the list keeps it selectable until the user
+    picks a listed F-key. Apply then stores that choice instead.
+    @tags: #model/shortcut #model/config #subject/form #type/helper
+    """
+    keys = list(SYSTEM_SHORTCUT_KEYS)
+    current = (current or "").strip()
+    if current and current.upper() not in {item.upper() for item in keys}:
+        keys.append(current)
+    return keys
+
+
+def save_config(path: Path, config: dict) -> dict:
+    """Atomically merge and write config so a crash cannot truncate the file.
+
+    Bindings are merged, not replaced: a favorite-only GUI save keeps ids that
+    `learn` added. Other top-level keys on disk are kept unless `config` sets
+    them. Returns the merged document that was written.
+    @tags: #action/save #action/merge #model/config #side-effect/file #side-effect/mutation
+    """
+    if path.exists():
+        existing = load_config(path)
+    else:
+        existing = {
+            "_comment": DEFAULT_CONFIG["_comment"],
+            "bindings": dict(DEFAULT_CONFIG["bindings"]),
+        }
+    merged = dict(existing)
+    for key, value in config.items():
+        if key == "bindings":
+            continue
+        merged[key] = value
+    bindings = dict(existing.get("bindings") or {})
+    bindings.update(config.get("bindings") or {})
+    merged["bindings"] = bindings
+    path.parent.mkdir(parents=True, exist_ok=True)
+    _chown_user(path.parent)
+    tmp = path.with_name(path.name + ".tmp")
+    tmp.write_text(json.dumps(merged, indent=2) + "\n")
+    tmp.replace(path)
+    _chown_user(path)
+    return merged

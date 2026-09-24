@@ -6,12 +6,16 @@ status: resolved
 category: architecture
 domain: mapper-lifecycle
 tags: [systemd, autostart, gui, restart]
-related: [mskb.py, mskb_gui.py, docs/usage.md]
+related: [mskb.py, mskb_lifecycle.py, mskb_gui.py, docs/usage.md, mskb-public-facade.md]
 ---
 
 # Mapper systemd lifecycle
 
 Supported login autostart is only `systemctl --user enable --now mskb.service`.
+
+Implementation lives in `mskb_lifecycle.py` (re-exported from `mskb`). Unit
+tests that mock `restart_mapper` helpers must patch `mskb_lifecycle`, not only
+the facade.
 
 GNOME Startup Applications entries whose `Exec=` launches `mskb.py run` dual-fire
 Favorites when the unit is also running. `remove_mskb_autostart()` deletes those
