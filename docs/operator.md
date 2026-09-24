@@ -1,7 +1,7 @@
-# Using the extra keys
+# Operator guide
 
-How to install the mapper, assign actions, and start it at login.
-This is the Linux stand-in for Windows Mouse and Keyboard Center.
+Install the mapper, assign actions (GUI or CLI), wire systemd, and debug
+hidraw. End users should use the README and the GTK app instead.
 
 Repo commands assume you are in the project directory:
 
