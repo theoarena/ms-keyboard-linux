@@ -1,0 +1,35 @@
+action:
+  save: [persist, write]
+  normalize: [strip, clean, classify, parse]
+  install: []
+  launch: [open, start]
+  merge: [combine]
+model:
+  config: [settings, bindings]
+  binding: []
+  favorite: [favorites]
+  shortcut: [key]
+  desktop: []
+format:
+  string: []
+  path: []
+subject:
+  form: [gui, ui]
+  cli: []
+  desktop: []
+  favorites: []
+type:
+  helper: []
+  command: [cli]
+  constant: []
+  window: [component]
+side-effect:
+  mutation: [mutate, state]
+  file: [filesystem, io]
+  process: [subprocess, systemd]
+scope:
+  user: []
+  gui: []
+lifecycle: {}
+complexity: {}
+security: {}

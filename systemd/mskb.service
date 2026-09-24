@@ -1,0 +1,12 @@
+[Unit]
+Description=Microsoft Keyboard 2000 extra-key mapper
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+ExecStart=/usr/bin/python3 /home/theoarena/Dev/microsoft-keyboard/mskb.py run
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=graphical-session.target

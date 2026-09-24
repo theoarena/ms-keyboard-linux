@@ -1,0 +1,11 @@
+# Microsoft Wireless Keyboard 2000 / 2.4GHz Transceiver v7.0 (045e:0745)
+#
+# Consumer usages 0x29d/0x29e are Microsoft-reserved (Office Home / Task Pane).
+# hid-microsoft maps them to PROG1/PROG2; hid-generic leaves them unknown.
+# This only helps when the kernel already emits MSC_SCAN for those keys.
+
+evdev:input:b0003v045Ep0745*
+ KEYBOARD_KEY_c029d=prog1
+ KEYBOARD_KEY_c029e=prog2
+ KEYBOARD_KEY_c01a2=favorites
+ KEYBOARD_KEY_c022a=favorites
