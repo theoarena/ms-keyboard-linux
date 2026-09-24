@@ -1,6 +1,6 @@
-# Microsoft Keyboard
+# Microsoft Keyboard for Linux
 
-Give the My Favorites keys on your Wireless Keyboard 2000 something to do.
+Give the My Favorites keys on your Microsfot Wireless Keyboard 2000 something to do.
 
 [What the app does](#what-the-app-does) • [Who it's for](#who-its-for) • [Use the app](#use-the-app) • [Install](#install)
 
@@ -29,10 +29,10 @@ You can set each key differently. Apply replaces the previous choice for that ke
 
 | Action          | What you get                                                                                                                                                                                                                                   |
 | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Open app        | The key opens an app you already have. Choose **1**, then **Open app**, then **Firefox**. Apply. Press **1** and Firefox opens.                                                                                                                |
-| System shortcut | The key sends a function key from **F13** to **F24**, so your desktop can record it. Choose **2**, then **System shortcut**, then **F15**. Apply. In Settings → Keyboard → Shortcuts, press the physical **2** key and bind it to Lock screen. |
-| Command         | The key runs a command you type. Choose the star, then **Command**, and enter `firefox --private-window`. Apply. The star opens a private window.                                                                                              |
-| Nothing         | The key stays quiet. Choose the key, then **Nothing**, and apply.                                                                                                                                                                              |
+| Open app        | The key opens an app you already have.                                                            |
+| System shortcut | The key sends a function key from **F13** to **F24**, so your desktop can record it. |
+| Command         | The key runs a command you type.                                           |
+| Nothing         | The key stays quiet. |
 
 
 **Restart Mapper**, in the header, reloads your keys without changing what you saved. Use it when a key does not respond.
