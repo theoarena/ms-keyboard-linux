@@ -6,7 +6,7 @@ This is the Linux stand-in for Windows Mouse and Keyboard Center.
 Repo commands assume you are in the project directory:
 
 ```bash
-cd /home/theoarena/Dev/microsoft-keyboard
+cd ~/microsoft-keyboard
 ```
 
 ## 1. One-time install
