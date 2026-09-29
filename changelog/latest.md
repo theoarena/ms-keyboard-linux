@@ -9,6 +9,8 @@
 - Optional binding `label` is the title on a key card; the mapper still matches the HID id (`66ec7e29c8fe23231e25ad9e6ac8a15c28011ec3`)
 
 ### Changed
+- Bindings can store optional `kind` so Open app and Command stay distinct after Apply, even when they share an executable. A file without `kind` still infers Open app when the command matches an installed app (`d4edd0f523959f6ad491bd0b35070be1e16a0866`)
+- OffKeys opens at 520×680 so the first launch stays under the 720 breakpoint and stacks the keys above the form (`738d4d73bb7a86b63a65163498de0a76fb876599`)
 - The window shows what each extra key does, listens with a banner, and asks before discarding unsaved edits. Restart mapper is in the window menu. The window needs libadwaita 1.5 (`f6d9b99e839fbb71fa84fcddea7673275020cb9e`)
 - Bindings are nested by `vid:pid` so each keyboard has its own map; the window shows only the selected device; the mapper matches the hidraw that produced the report (`4ba865dca2bdeb1589088f075690957ffcb690cb`)
 - Key chooser is a wrapping grid of cards (at most three per row); the HID id is the second line only when a custom title is set (`66ec7e29c8fe23231e25ad9e6ac8a15c28011ec3`)
