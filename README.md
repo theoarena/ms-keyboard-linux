@@ -1,8 +1,10 @@
 # OffKeys
 
-![OffKeys window assigning extra keys to apps](overview.png)
-
 Linux app to bind extra keyboard keys to shortcuts, apps, and commands.
+
+Licensed under the [GNU GPL v3](LICENSE) or any later version. Use, modify, and share it only on those terms. A proprietary application cannot include it.
+
+![OffKeys window assigning extra keys to apps](overview.png)
 
 [What Offkeys does](#what-the-app-does) • [Using the app](#use-the-app) • [Install](#install) • [Tested devices](#tested-devices) • [Tested systems](#tested-systems)
 

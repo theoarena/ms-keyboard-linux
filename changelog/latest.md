@@ -1,7 +1,6 @@
 ## [latest]
 
 ### Added
-- README hero screenshot (`overview.png`) of the OffKeys window
 - GTK4/libadwaita window (`mskb.py gui`) to assign My Favorites, plus a Restart Mapper header action (`92222a58dc8bdad687461a187cd8c740e27bd7a8`)
 - systemd-only mapper restart: Apply/`enable --now` reload `mskb.service` and remove GNOME autostart entries that launch `mskb.py run` (`92222a58dc8bdad687461a187cd8c740e27bd7a8`)
 - Mapper learns an extra key from any selected HID device as usage id `vid:pid:page:usage` (wider fields include the value); Wireless Keyboard 2000 favorite ids still match first (`a737e6082c2b22c3f9aafa9067b8b7f014cd4255`)
@@ -18,4 +17,3 @@
 - Renamed `docs/usage.md` to `docs/operator.md` and reframed it as the operator guide (CLI, systemd, hidraw); README stays the end-user app guide
 - Config `devices` (default `045e:0745`) chooses which receivers are opened; `save_config(..., replace_bindings=True)` lets the window remove a key (`a737e6082c2b22c3f9aafa9067b8b7f014cd4255`)
 - udev grants hidraw read for every device; `udev/61-mskb.hwdb` and `bind-driver` stay on `045e:0745` (`a737e6082c2b22c3f9aafa9067b8b7f014cd4255`)
-- Public name is **OffKeys** on the window, app grid, and systemd unit description. CLI, config (`~/.config/mskb/`), `mskb.py`, and `application_id` `dev.mskb.Favorites` stay `mskb`. README lists tested devices (Microsoft Wireless Keyboard 2000, `045e:0745`) and Ubuntu-based systems (Ubuntu 24.04 GNOME, Zorin 18 GNOME) (`6e2893b4d98126c208e45b1bc74e7ede450e603f`)
